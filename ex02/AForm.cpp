@@ -1,13 +1,13 @@
-#include "Form.hpp"
+#include "AForm.hpp"
 #include "Bureaucrat.hpp"
 
 // Exceptions
-Form::GradeTooHighException::GradeTooHighException() : MyException("Grade too high!") {}
-Form::GradeTooLowException::GradeTooLowException() : MyException("Grade too low!") {}
+AForm::GradeTooHighException::GradeTooHighException() : MyException("Grade too high!") {}
+AForm::GradeTooLowException::GradeTooLowException() : MyException("Grade too low!") {}
 
 // methods
 
-void Form::beSigned(const Bureaucrat &b) 
+void AForm::beSigned(const Bureaucrat &b) 
 {
     if (b.getGrade() > this->gradeToSign)
         throw GradeTooLowException();
@@ -15,33 +15,33 @@ void Form::beSigned(const Bureaucrat &b)
 }
 
 //getters
-int Form::getGradeToSign() const
+int AForm::getGradeToSign() const
 {
     return (this->gradeToSign);
 }
 
-int Form::getGradeToExecute() const
+int AForm::getGradeToExecute() const
 {
     return (this->gradeToExecute);
 }
 
-bool Form::getIsSigned() const
+bool AForm::getIsSigned() const
 {
     return (this->isSigned);
 }
 
-std::string Form::getName() const
+std::string AForm::getName() const
 {
     return (this->name);
 }
 
 // Default constructor
-Form::Form(void) : name(""), isSigned(false), gradeToSign(0), gradeToExecute(0)
+AForm::AForm(void) : name(""), isSigned(false), gradeToSign(0), gradeToExecute(0)
 {
-    throw MyException("Cannot construct an empty Form");
+    throw MyException("Cannot construct an empty AForm");
 }
 
-Form::Form(const std::string& name, int gradeToSign, int gradeToExecute)
+AForm::AForm(const std::string& name, int gradeToSign, int gradeToExecute)
     : name(name), isSigned(false),
       gradeToSign(gradeToSign), gradeToExecute(gradeToExecute)
 {
@@ -53,7 +53,7 @@ Form::Form(const std::string& name, int gradeToSign, int gradeToExecute)
 }
 
 // Copy constructor
-Form::Form(const Form &other) : name(other.name), isSigned(other.isSigned),
+AForm::AForm(const AForm &other) : name(other.name), isSigned(other.isSigned),
       gradeToSign(other.gradeToSign), gradeToExecute(other.gradeToExecute)
 {
     std::cout << "Copy constructor called" << std::endl;
@@ -62,7 +62,7 @@ Form::Form(const Form &other) : name(other.name), isSigned(other.isSigned),
 }
 
 // Assignment operator overload
-Form &Form::operator=(const Form &other)
+AForm &AForm::operator=(const AForm &other)
 {
     std::cout << "Assignment operator called" << std::endl;
     (void) other;
@@ -70,16 +70,18 @@ Form &Form::operator=(const Form &other)
 }
 
 // Destructor
-Form::~Form(void)
+AForm::~AForm(void)
 {
     std::cout << "Destructor called" << std::endl;
     return ;
 }
 
+
+
 // Sobrecarga operador <<
-std::ostream& operator<<(std::ostream& os, const Form& f)
+std::ostream& operator<<(std::ostream& os, const AForm& f)
 {
-    os << "Form \"" << f.getName()
+    os << "AForm \"" << f.getName()
        << "\", (signed: " << (f.getIsSigned() ? "yes" : "no")
        << ", grade to sign: " << f.getGradeToSign()
        << ", grade to execute: " << f.getGradeToExecute() << ")";
