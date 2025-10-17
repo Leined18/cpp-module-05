@@ -4,7 +4,7 @@
 
 class MyException : public std::exception
 {
-    private:
+    protected:
         std::string message;
     public:
         MyException(void);

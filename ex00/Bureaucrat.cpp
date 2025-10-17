@@ -1,30 +1,8 @@
 #include "Bureaucrat.hpp"
 
-void testIncrement(Bureaucrat &b, int n)
-{
-    try
-    {
-        b.incrementGrade(n);
-        std::cout << "Nuevo grado de " << b.getName() << ": " << b.getGrade() << '\n';
-    }
-    catch(const MyException& e)
-    {
-        std::cerr << e << '\n';
-    }
-}
 
-void testDecrement(Bureaucrat &b, int n)
-{
-    try
-    {
-        b.decrementGrade(n);
-        std::cout << "Nuevo grado de " << b.getName() << ": " << b.getGrade() << '\n';
-    }
-    catch(const MyException& e)
-    {
-        std::cerr << e << '\n';
-    }
-}
+Bureaucrat::GradeTooHighException::GradeTooHighException() : MyException("Grade too high!") {}
+Bureaucrat::GradeTooLowException::GradeTooLowException() : MyException("Grade too low!") {}
 
 int Bureaucrat::getGrade() const
 {
@@ -36,74 +14,50 @@ std::string Bureaucrat::getName() const
     return (this->name);
 }
 
-void Bureaucrat::decrementGrade()
-{
-    if (grade >= 150)
-        throw MyException("Error: cannot decrement beyond 150");
-    this->grade += 1;
-
-}
-
-void Bureaucrat::incrementGrade()
-{
-    if (grade <= 1)
-        throw MyException("Error: cannot increment beyond 1");
-    this->grade -= 1;
-}
-
 void Bureaucrat::decrementGrade(int n)
 {
-    if (grade >= 150)
-        throw MyException("Error: cannot decrement beyond 150");
     if ((grade + n) > 150)
-        throw MyException("Error: cannot decrement beyond 150 + n");
+        throw GradeTooLowException();
     this->grade += n;
 
 }
 
 void Bureaucrat::incrementGrade(int n)
 {
-    if (grade <= 1)
-        throw MyException("Error: cannot increment beyond 1");
     if ((grade - n) < 1)
-        throw MyException("Error: cannot increment beyond 1 - n");
+        throw GradeTooHighException();
     this->grade -= n;
 }
 
-
-
 // Default constructor
-Bureaucrat::Bureaucrat(void) : name("unknown"), grade(150)
-{
-    return ;
-}
+Bureaucrat::Bureaucrat(void) : name("unknown"), grade(150) {}
 
-Bureaucrat::Bureaucrat(const std::string &name, int grade) : name(name), grade(grade)
+Bureaucrat::Bureaucrat(const std::string &name, int grade) : name(name)
 {
+    if (grade > 150)
+        throw GradeTooLowException();
+    if (grade < 1)
+        throw GradeTooHighException();
+    this->grade = grade;
     return ;
 }
 
 // Copy constructor
-Bureaucrat::Bureaucrat(const Bureaucrat &other)
-{
-    std::cout << "Copy constructor called" << std::endl;
-    (void) other;
-    return ;
-}
+Bureaucrat::Bureaucrat(const Bureaucrat &other) : name(other.name), grade(other.grade) {}
 
 // Assignment operator overload
 Bureaucrat &Bureaucrat::operator=(const Bureaucrat &other)
 {
-    std::cout << "Assignment operator called" << std::endl;
-    (void) other;
+    if (this != &other)
+    {
+        name = other.name;
+        grade = other.grade;
+    }
     return (*this);
 }
 
 // Destructor
-Bureaucrat::~Bureaucrat(void)
-{
-    return ;
-}
+Bureaucrat::~Bureaucrat(void) {}
 
 // Sobrecarga operador <<
 std::ostream& operator<<(std::ostream& os, const Bureaucrat& b)

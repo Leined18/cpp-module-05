@@ -18,17 +18,15 @@ MyException::MyException(const std::string& msg) : message(msg)
 // Copy constructor
 MyException::MyException(const MyException &other)
 {
-    std::cout << "Copy constructor called" << std::endl;
-    (void) other;
-    return ;
+    this->message = other.message;
 }
 
 // Assignment operator overload
 MyException &MyException::operator=(const MyException &other)
 {
-    std::cout << "Assignment operator called" << std::endl;
-    (void) other;
-    return (*this);
+    if (this != &other)
+        this->message = other.message;
+    return *this;
 }
 
 // Destructor
