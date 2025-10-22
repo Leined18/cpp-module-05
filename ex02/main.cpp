@@ -1,61 +1,72 @@
 #include "Bureaucrat.hpp"
-#include "Form.hpp"
+#include "ShrubberyCreationForm.hpp"
+#include "RobotomyRequestForm.hpp"
+#include "PresidentialPardonForm.hpp"
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
 
-// Test de creación de formularios
-void testFormCreation(const std::string& name, int gradeToSign, int gradeToExecute)
+// Intentar firmar un formulario
+void trySign(Bureaucrat& b, AForm& f)
 {
-    std::cout << "\n🧾 Creando Formulario: " << name 
-              << " (sign grade: " << gradeToSign 
-              << ", execute grade: " << gradeToExecute << ")...\n";
-
-    try
-    {
-        Form f(name, gradeToSign, gradeToExecute);
-        std::cout << "✅ Creado correctamente: " << f << "\n";
-    }
-    catch (const MyException& e)
-    {
-        std::cerr << "❌ Error al crear Formulario: " << e << '\n';
+    std::cout << "\n🖋️ " << b.getName() << " intenta firmar " << f.getName() << "...\n";
+    try {
+        b.signForm(f);
+    } catch (const std::exception& e) {
+        std::cerr << "❌ Error: " << e.what() << std::endl;
     }
 }
 
-// Test de firma de formularios
-void testFormSigning(Bureaucrat& b, Form& f)
+// Intentar ejecutar un formulario
+void tryExecute(Bureaucrat& b, AForm& f)
 {
-    std::cout << "\n🖊️  Intentando que " << b.getName() 
-              << " firme el formulario \"" << f.getName() << "\"...\n";
+    std::cout << "\n⚙️ " << b.getName() << " intenta ejecutar " << f.getName() << "...\n";
+    try {
+        b.executeForm(f);
+    } catch (const std::exception& e) {
+        std::cerr << "❌ Error: " << e.what() << std::endl;
+    }
+}
 
-    b.signForm(f);
-
-    std::cout << "📄 Estado actual del formulario: " 
-              << (f.getIsSigned() ? "Firmado ✅" : "No firmado ❌") << "\n";
+// Ejecutar pruebas con un burócrata y lista de formularios
+void runTests(Bureaucrat& b, std::vector<AForm*>& forms)
+{
+    for (size_t i = 0; i < forms.size(); ++i)
+    {
+        AForm* f = forms[i];
+        std::cout << "\n📄 Formulario:\n" << *f << std::endl;
+        trySign(b, *f);
+        tryExecute(b, *f);
+    }
 }
 
 int main()
 {
-    std::cout << "🚀 Inicio de pruebas de Form\n";
+    std::srand(std::time(NULL)); // Inicializar rand()
 
-    // Crear Bureaucrats de prueba
+    std::cout << "🚀 Inicio de pruebas\n";
+
+    // Crear burócratas
     Bureaucrat jefe("Jefe", 1);
-    Bureaucrat empleado("Empleado", 100);
+    Bureaucrat empleado("Empleado", 110);
 
-    // Crear formularios válidos e inválidos
-    testFormCreation("Contrato", 50, 25);
-    testFormCreation("Permiso", 1, 1);
-    testFormCreation("Formulario ilegal bajo", 0, 10);
-    testFormCreation("Formulario ilegal alto", 151, 150);
+    // Crear formularios concretos
+    ShrubberyCreationForm shrub("Jardin");
+    RobotomyRequestForm robo("Robot-X");
+    PresidentialPardonForm pardon("Inocente");
 
-    // Instancia válida para pruebas
-    Form contrato("Contrato", 50, 25);
+    // Lista de formularios
+    std::vector<AForm*> forms;
+    forms.push_back(&shrub);
+    forms.push_back(&robo);
+    forms.push_back(&pardon);
 
-    std::cout << "\n📌 Estado inicial:\n";
-    std::cout << jefe << "\n" << empleado << "\n" << contrato << "\n";
+    std::cout << "\n🔍 Pruebas con empleado (rango insuficiente)\n";
+    runTests(empleado, forms);
 
-    // Intento fallido: empleado no tiene rango suficiente
-    testFormSigning(empleado, contrato);
-
-    // Intento exitoso: jefe firma
-    testFormSigning(jefe, contrato);
+    std::cout << "\n✅ Pruebas con jefe (rango máximo)\n";
+    runTests(jefe, forms);
 
     std::cout << "\n🎉 Fin de pruebas\n";
     return 0;

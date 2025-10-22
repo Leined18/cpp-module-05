@@ -1,7 +1,7 @@
 NAME = form_test
 
 CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Iinc/
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Iinc/ -fsanitize=address
 
 SRC_DIR = .
 OBJ_DIR = obj
@@ -9,8 +9,11 @@ OBJ_DIR = obj
 SRCS = $(SRC_DIR)/main.cpp \
        $(SRC_DIR)/Bureaucrat.cpp \
        $(SRC_DIR)/MyException.cpp \
-	   $(SRC_DIR)/AForm.cpp
-
+	   $(SRC_DIR)/AForm.cpp \
+	   $(SRC_DIR)/ShrubberyCreationForm.cpp \
+	   $(SRC_DIR)/RobotomyRequestForm.cpp \
+	   $(SRC_DIR)/PresidentialPardonForm.cpp \
+	   
 OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
 all: $(NAME)

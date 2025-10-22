@@ -1,5 +1,5 @@
 #include "Bureaucrat.hpp"
-#include "Form.hpp"
+#include "AForm.hpp"
 
 
 Bureaucrat::GradeTooHighException::GradeTooHighException() : MyException("Grade too high!") {}
@@ -22,14 +22,25 @@ void Bureaucrat::incrementGrade(int n)
     this->grade -= n;
 }
 
-void Bureaucrat::signForm(Form &f)
+void Bureaucrat::signForm(AForm &f)
 {
     try{
         f.beSigned(*this);
-        std::cout << *this << " signed " << f << std::endl;
+        std::cout << *this << " signed " << f.getName() << std::endl;
     }
     catch (MyException &e){
-        std::cout << *this << " couldn’t sign " << f << " because " << e << std::endl;
+        std::cout << *this << " couldn’t sign " << f.getName() << " because " << e << std::endl;
+    }
+}
+
+void Bureaucrat::executeForm(AForm &f)
+{
+    try{
+        f.beExecuted(*this);
+        std::cout << *this << " executed " << f.getName() << std::endl;
+    }
+    catch (MyException &e){
+        std::cout << *this << " couldn’t execute " << f.getName() << " because " << e << std::endl;
     }
 }
 

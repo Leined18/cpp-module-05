@@ -4,7 +4,7 @@
 
 #include "MyException.hpp"
 
-class Form;
+class AForm;
 
 class Bureaucrat
 {
@@ -23,7 +23,8 @@ class Bureaucrat
         std::string getName() const;
 
         // methods
-        void        signForm(Form &f);
+        void        signForm(AForm &f);
+        void        executeForm(AForm &f);
         void        incrementGrade(int amount = 1);
         void        decrementGrade(int amount = 1);
 

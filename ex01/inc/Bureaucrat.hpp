@@ -21,9 +21,9 @@ class Bureaucrat
         // getters
         int         getGrade() const;
         std::string getName() const;
+        void        signForm(Form &f);
 
         // methods
-        void        signForm(Form &f);
         void        incrementGrade(int amount = 1);
         void        decrementGrade(int amount = 1);
 
