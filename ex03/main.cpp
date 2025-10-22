@@ -2,11 +2,15 @@
 #include "ShrubberyCreationForm.hpp"
 #include "RobotomyRequestForm.hpp"
 #include "PresidentialPardonForm.hpp"
+#include "Intern.hpp"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 
-// Intentar firmar un formulario
+// ----------------------------
+// Funciones auxiliares
+// ----------------------------
+
 void trySign(Bureaucrat& b, AForm& f)
 {
     std::cout << "\n🖋️ " << b.getName() << " intenta firmar " << f.getName() << "...\n";
@@ -17,7 +21,6 @@ void trySign(Bureaucrat& b, AForm& f)
     }
 }
 
-// Intentar ejecutar un formulario
 void tryExecute(Bureaucrat& b, AForm& f)
 {
     std::cout << "\n⚙️ " << b.getName() << " intenta ejecutar " << f.getName() << "...\n";
@@ -28,21 +31,27 @@ void tryExecute(Bureaucrat& b, AForm& f)
     }
 }
 
-// Ejecutar pruebas con un burócrata y arreglo de formularios
-void runTests(Bureaucrat& b, AForm* forms[], size_t count)
+void runTests(Bureaucrat& b, AForm* forms[], int size)
 {
-    for (size_t i = 0; i < count; ++i)
+    for (int i = 0; i < size; ++i)
     {
         AForm* f = forms[i];
+        if (!f) continue;
+
         std::cout << "\n📄 Formulario:\n" << *f << std::endl;
         trySign(b, *f);
         tryExecute(b, *f);
     }
 }
 
+// ----------------------------
+// Programa principal
+// ----------------------------
+
+
 int main()
 {
-    std::srand(std::time(NULL)); // Inicializar rand()
+    std::srand(std::time(NULL)); // Semilla para rand()
 
     std::cout << "🚀 Inicio de pruebas\n";
 
@@ -50,20 +59,22 @@ int main()
     Bureaucrat jefe("Jefe", 1);
     Bureaucrat empleado("Empleado", 110);
 
-    // Crear formularios concretos
-    ShrubberyCreationForm shrub("Jardin");
-    RobotomyRequestForm robo("Robot-X");
-    PresidentialPardonForm pardon("Inocente");
-
-    // Arreglo clásico de punteros
-    AForm* forms[] = { &shrub, &robo, &pardon };
-    size_t formCount = sizeof(forms) / sizeof(forms[0]);
+    // Crear Intern y usar makeForm
+    Intern intern;
+    AForm* forms[3];
+    forms[0] = intern.makeForm("shrubbery creation", "Jardin");
+    forms[1] = intern.makeForm("robotomy request", "Robot-X");
+    forms[2] = intern.makeForm("presidential pardon", "Inocente");
 
     std::cout << "\n🔍 Pruebas con empleado (rango insuficiente)\n";
-    runTests(empleado, forms, formCount);
+    runTests(empleado, forms, 3);
 
     std::cout << "\n✅ Pruebas con jefe (rango máximo)\n";
-    runTests(jefe, forms, formCount);
+    runTests(jefe, forms, 3);
+
+    // Liberar memoria (evitar leaks)
+    for (int i = 0; i < 3; ++i)
+        delete forms[i];
 
     std::cout << "\n🎉 Fin de pruebas\n";
     return 0;
