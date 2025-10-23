@@ -79,9 +79,9 @@ Form::~Form(void)
 // Sobrecarga operador <<
 std::ostream& operator<<(std::ostream& os, const Form& f)
 {
-    os << "Form \"" << f.getName()
-       << "\", (signed: " << (f.getIsSigned() ? "yes" : "no")
-       << ", grade to sign: " << f.getGradeToSign()
-       << ", grade to execute: " << f.getGradeToExecute() << ")";
+    os << BOLD << CYAN << "📄 Form: " << RESET << "\"" << f.getName() << "\"\n"
+       << "   " << YELLOW << "• Signed: " << RESET << (f.getIsSigned() ? GREEN "yes" RESET : RED "no" RESET) << "\n"
+       << "   " << YELLOW << "• Grade to Sign: " << RESET << f.getGradeToSign() << "\n"
+       << "   " << YELLOW << "• Grade to Execute: " << RESET << f.getGradeToExecute() << "\n";
     return os;
 }
